@@ -31,7 +31,7 @@ public class PrepTask1a_CRUD {
          // TODO Step 6: Update the customer's billing address.
          // TODO Step 7: Create a customer group.
          // TODO Step 8: Assign the customer to the customer group.
-        // TODO Step 9: Delete the customer.
+         // TODO Step 9: Delete the customer.
         // TODO Step 10: Create a tax category.
         // TODO Step 11: Create a few product categories.
         // TODO Step 12: Query the categories by key.
@@ -78,6 +78,7 @@ public class PrepTask1a_CRUD {
                 .get()
                 .getBody()
                 .getCustomer()
+                .getKey()
         );
 
         logger.info("Update the customer's billing address.\n" +
@@ -91,6 +92,7 @@ public class PrepTask1a_CRUD {
                 )
                 .get()
                 .getBody()
+                .getAddresses()
         );
 
         logger.info("Create a customer group.\n" +
@@ -99,7 +101,8 @@ public class PrepTask1a_CRUD {
                     customerGroupKey
                 )
                 .get()
-                .getBody().getName()
+                .getBody()
+                .getKey()
         );
 
         logger.info("Assign the customer to the customer group.\n" +
@@ -109,6 +112,16 @@ public class PrepTask1a_CRUD {
                 )
                 .get()
                 .getBody()
+                .getKey()
+        );
+
+        logger.info("Delete the customer.\n" +
+            customerService.deleteCustomer(
+                    customerService.getCustomerByKey(customerKey).get()
+                )
+                .get()
+                .getBody()
+                .getKey()
         );
 
         apiRoot_poc.close();

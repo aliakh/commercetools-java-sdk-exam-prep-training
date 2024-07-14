@@ -123,4 +123,18 @@ public class CustomerService {
                     .build())
                 .execute();
     }
+
+    public CompletableFuture<ApiHttpResponse<Customer>> deleteCustomer(
+        final ApiHttpResponse<Customer> customerApiHttpResponse) {
+
+        final Customer customer = customerApiHttpResponse.getBody();
+
+        return
+            apiRoot
+                .customers()
+                .withKey(customer.getKey())
+                .delete()
+                .withVersion(customer.getVersion())
+                .execute();
+    }
 }
