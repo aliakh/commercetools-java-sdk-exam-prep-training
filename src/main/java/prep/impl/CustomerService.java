@@ -27,12 +27,13 @@ public class CustomerService {
         }
 
         public CompletableFuture<ApiHttpResponse<Customer>> getCustomerByKey(
-                String customerKey)
-        {
-            return
-                    null;
+            String customerKey) {
+            return apiRoot
+                .customers()
+                .withKey(customerKey)
+                .get()
+                .execute();
         }
-
 
         public CompletableFuture<ApiHttpResponse<CustomerSignInResult>> createCustomer(
             final String email,

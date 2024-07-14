@@ -37,16 +37,17 @@ public class PrepTask1a_CRUD {
 
 //        String customerGroupName = "B2B Group L2";
 //        String customerGroupKey = "b2b-group-l2";
-        String customerEmail = "john_roe@email.com";
-        String customerPassword = "john_roe_password";
-        String customerKey = "john_roe";
+        String customerEmail = "john_foe@email.com";
+        String customerPassword = "john_foe_password";
+        String customerKey = "john_foe";
         String customerFirstName = "John";
-        String customerLastName = "Roe";
+        String customerLastName = "Foe";
         String customerCountry = "DE";
-//        String customerStreetName = "Am Borsigcurm";
-//        String customerStreetNumber = "2";
-//        String customerPostalCode = "13507 ";
-//        String customerCity = "Berlin";
+
+        String customerStreetName = "Hedderichstrasse";
+        String customerStreetNumber = "43";
+        String customerPostalCode = "60594";
+        String customerCity = "Frankfurt am Main";
 
         final ProjectApiRoot apiRoot_poc =
                 createApiClient(
@@ -88,7 +89,9 @@ public class PrepTask1a_CRUD {
                 customerStreetNumber,
                 customerPostalCode,
                 customerCity,
-                customerCountry).get().getBody().getKey()
+                customerCountry)
+                .get()
+                .getBody()
         );
 
         apiRoot_poc.close();
