@@ -1,8 +1,6 @@
 package prep.impl;
 
 import com.commercetools.api.client.ProjectApiRoot;
-import com.commercetools.api.models.customer_group.CustomerGroup;
-import com.commercetools.api.models.customer_group.TaxCategory;
 import com.commercetools.api.models.tax_category.*;
 import io.vrap.rmf.base.client.ApiHttpResponse;
 

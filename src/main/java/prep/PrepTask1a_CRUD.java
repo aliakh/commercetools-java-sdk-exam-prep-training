@@ -6,6 +6,7 @@ import com.commercetools.api.models.common.LocalizedStringBuilder;
 import com.commercetools.api.models.tax_category.TaxRateDraft;
 import com.commercetools.api.models.tax_category.TaxRateDraftBuilder;
 
+import prep.impl.CategoryService;
 import prep.impl.CustomerGroupService;
 import prep.impl.CustomerService;
 import prep.impl.ApiPrefixHelper;
@@ -16,6 +17,7 @@ import prep.impl.TaxCategoryService;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.HashMap;
 import java.util.concurrent.ExecutionException;
 
 import static prep.impl.ClientService.createApiClient;
@@ -59,12 +61,7 @@ public class PrepTask1a_CRUD {
         CustomerService customerService = new CustomerService(apiRoot_poc);
         CustomerGroupService customerGroupService = new CustomerGroupService(apiRoot_poc);
         TaxCategoryService taxCategoryService = new TaxCategoryService(apiRoot_poc);
-//        CategoryService categoryService = new CategoryService(apiRoot_poc);
-
-//                "Delete the customer.\n" +
-//                "Create a tax category.\n" +
-//                "Create a few product categories.\n" +
-//                "Query the categories by key.\n");
+        CategoryService categoryService = new CategoryService(apiRoot_poc);
 
         logger.info("Create a new customer.\n" +
             customerService.createCustomer(
@@ -141,8 +138,8 @@ public class PrepTask1a_CRUD {
                 .getKey()
         );
 
-        String taxCategoryName = "Tax Category 2";
-        String taxCategoryKey = "tax-category-2";
+        String taxCategoryName = "Tax Category 1";
+        String taxCategoryKey = "tax-category-1";
 
         List<TaxRateDraft> taxRates = new ArrayList<>();
 
@@ -170,6 +167,63 @@ public class PrepTask1a_CRUD {
                     taxCategoryKey,
                     taxRates
                 )
+                .get()
+                .getBody()
+                .getKey()
+        );
+
+        final LocalizedString categoryName1 = LocalizedStringBuilder.of()
+            .values(new HashMap<String, String>() {
+                {
+                    put("en", "Home");
+                    put("de", "Haus");
+                }
+            })
+            .build();
+
+        final LocalizedString categoryName2 = LocalizedStringBuilder.of()
+            .values(new HashMap<String, String>() {
+                {
+                    put("en", "Garden");
+                    put("de", "Garten");
+                }
+            })
+            .build();
+
+        String categoryKey1 = "home";
+        String orderHint1 = "0.9";
+        String categoryKey2 = "garden";
+        String orderHint2 = "0.8";
+
+        logger.info("Create a product category.\n" +
+            categoryService.createCategory(
+                    categoryName1,
+                    categoryKey1,
+                    orderHint1)
+                .get()
+                .getBody()
+                .getName()
+        );
+
+        logger.info("Create another product category.\n" +
+            categoryService.createCategory(
+                    categoryName2,
+                    categoryKey2,
+                    orderHint2)
+                .get()
+                .getBody()
+                .getName()
+        );
+
+        logger.info("Query a category by key.\n" +
+            categoryService.getCategoryByKey(                    categoryKey1)
+                .get()
+                .getBody()
+                .getKey()
+        );
+
+        logger.info("Query another category by key.\n" +
+            categoryService.getCategoryByKey(                    categoryKey2)
                 .get()
                 .getBody()
                 .getKey()
