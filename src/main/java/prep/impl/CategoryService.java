@@ -4,7 +4,6 @@ import com.commercetools.api.client.ProjectApiRoot;
 import com.commercetools.api.models.category.Category;
 import com.commercetools.api.models.category.CategoryDraftBuilder;
 import com.commercetools.api.models.common.LocalizedString;
-import com.commercetools.api.models.tax_category.TaxCategory;
 import io.vrap.rmf.base.client.ApiHttpResponse;
 
 import java.util.concurrent.CompletableFuture;

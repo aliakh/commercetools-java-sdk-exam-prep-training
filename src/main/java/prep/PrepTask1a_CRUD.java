@@ -37,12 +37,12 @@ public class PrepTask1a_CRUD {
         // TODO Step 2: Provide credentials in dev.properties
         // TODO Step 3: Provide prefix in APIHelper
         // TODO Step 4: Check ClientService.java
-         // TODO Step 5: Create a new customer.
-         // TODO Step 6: Update the customer's billing address.
-         // TODO Step 7: Create a customer group.
-         // TODO Step 8: Assign the customer to the customer group.
-         // TODO Step 9: Delete the customer.
-         // TODO Step 10: Create a tax category.
+        // TODO Step 5: Create a new customer.
+        // TODO Step 6: Update the customer's billing address.
+        // TODO Step 7: Create a customer group.
+        // TODO Step 8: Assign the customer to the customer group.
+        // TODO Step 9: Delete the customer.
+        // TODO Step 10: Create a tax category.
         // TODO Step 11: Create a few product categories.
         // TODO Step 12: Query the categories by key.
 
