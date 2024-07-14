@@ -53,7 +53,7 @@ public class CustomerService {
                     .key(customerKey)
                     .addresses(
                         AddressBuilder.of()
-                            //.key(customerKey + "-" + country)
+                            .key(customerKey + "-" + country)
                             .country(country)
                             .build()
                     )
@@ -80,7 +80,7 @@ public class CustomerService {
                     .version(customer.getVersion())
                     .actions(
                         CustomerChangeAddressActionBuilder.of()
-                            //.addressKey(customer.getKey() + "-" + country + "v2")
+                            .addressKey(customer.getKey() + "-" + country)
                             .address(
                                 AddressBuilder.of()
                                     .firstName(customer.getFirstName())

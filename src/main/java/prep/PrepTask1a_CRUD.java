@@ -37,11 +37,11 @@ public class PrepTask1a_CRUD {
 
 //        String customerGroupName = "B2B Group L2";
 //        String customerGroupKey = "b2b-group-l2";
-        String customerEmail = "john_foe@email.com";
-        String customerPassword = "john_foe_password";
-        String customerKey = "john_foe";
+        String customerEmail = "john_soe@email.com";
+        String customerPassword = "john_soe_password";
+        String customerKey = "john_soe";
         String customerFirstName = "John";
-        String customerLastName = "Foe";
+        String customerLastName = "Soe";
         String customerCountry = "DE";
 
         String customerStreetName = "Hedderichstrasse";
@@ -84,12 +84,13 @@ public class PrepTask1a_CRUD {
 
         logger.info("Update the customer's billing address.\n" +
             customerService.updateCustomerBillingAddress(
-                customerService.getCustomerByKey(customerKey).get(),
-                customerStreetName,
-                customerStreetNumber,
-                customerPostalCode,
-                customerCity,
-                customerCountry)
+                    customerService.getCustomerByKey(customerKey).get(),
+                    customerStreetName,
+                    customerStreetNumber,
+                    customerPostalCode,
+                    customerCity,
+                    customerCountry
+                )
                 .get()
                 .getBody()
         );
