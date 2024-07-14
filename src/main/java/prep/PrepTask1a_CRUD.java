@@ -175,6 +175,15 @@ public class PrepTask1a_CRUD {
                 .getKey()
         );
 
+        logger.info("Delete the tax category.\n" +
+            taxCategoryService.deleteTaxCategory(
+                    taxCategoryService.getTaxCategoryByKey(taxCategoryKey).get()
+                )
+                .get()
+                .getBody()
+                .getKey()
+        );
+
         apiRoot_poc.close();
     }
 }
