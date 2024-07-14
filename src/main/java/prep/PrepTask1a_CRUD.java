@@ -124,6 +124,15 @@ public class PrepTask1a_CRUD {
                 .getKey()
         );
 
+        logger.info("Delete the customer group.\n" +
+            customerGroupService.deleteCustomerGroup(
+                    customerGroupService.getCustomerGroupByKey(customerGroupKey).get()
+                )
+                .get()
+                .getBody()
+                .getKey()
+        );
+
         apiRoot_poc.close();
     }
 }

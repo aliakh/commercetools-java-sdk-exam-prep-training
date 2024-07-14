@@ -45,4 +45,17 @@ public class CustomerGroupService {
                         .execute();
     }
 
+    public CompletableFuture<ApiHttpResponse<CustomerGroup>> deleteCustomerGroup(
+        final ApiHttpResponse<CustomerGroup> customerGroupApiHttpResponse) {
+
+        final CustomerGroup customerGroup = customerGroupApiHttpResponse.getBody();
+
+        return
+            apiRoot
+                .customerGroups()
+                .withKey(customerGroup.getKey())
+                .delete()
+                .withVersion(customerGroup.getVersion())
+                .execute();
+    }    
 }
