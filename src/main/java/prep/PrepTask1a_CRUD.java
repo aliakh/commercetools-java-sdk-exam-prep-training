@@ -6,6 +6,7 @@ import prep.impl.CustomerService;
 import prep.impl.ApiPrefixHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import prep.impl.TaxCategoryService;
 
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
@@ -43,14 +44,6 @@ public class PrepTask1a_CRUD {
         String customerLastName = "Doe";
         String customerCountry = "DE";
 
-        String customerStreetName = "Hedderichstrasse";
-        String customerStreetNumber = "43";
-        String customerPostalCode = "60594";
-        String customerCity = "Frankfurt am Main";
-
-        String customerGroupName = "Customer Group";
-        String customerGroupKey = "customer-group";
-
         final ProjectApiRoot apiRoot_poc =
                 createApiClient(
                         ApiPrefixHelper.API_POC_CLIENT_PREFIX.getPrefix()
@@ -58,7 +51,7 @@ public class PrepTask1a_CRUD {
 
         CustomerService customerService = new CustomerService(apiRoot_poc);
         CustomerGroupService customerGroupService = new CustomerGroupService(apiRoot_poc);
-//        TaxCategoryService taxCategoryService = new TaxCategoryService(apiRoot_poc);
+        TaxCategoryService taxCategoryService = new TaxCategoryService(apiRoot_poc);
 //        CategoryService categoryService = new CategoryService(apiRoot_poc);
 
 //                "Delete the customer.\n" +
@@ -81,6 +74,11 @@ public class PrepTask1a_CRUD {
                 .getKey()
         );
 
+        String customerStreetName = "Hedderichstrasse";
+        String customerStreetNumber = "43";
+        String customerPostalCode = "60594";
+        String customerCity = "Frankfurt am Main";
+
         logger.info("Update the customer's billing address.\n" +
             customerService.updateCustomerBillingAddress(
                     customerService.getCustomerByKey(customerKey).get(),
@@ -94,6 +92,9 @@ public class PrepTask1a_CRUD {
                 .getBody()
                 .getAddresses()
         );
+
+        String customerGroupName = "Customer Group 1";
+        String customerGroupKey = "customer-group-1";
 
         logger.info("Create a customer group.\n" +
             customerGroupService.createCustomerGroup(
@@ -131,6 +132,20 @@ public class PrepTask1a_CRUD {
                 .get()
                 .getBody()
                 .getKey()
+        );
+
+        String taxCategoryName = "new standard tax category";
+        String taxCategoryKey = "new-standard-tax-category";
+
+        logger.info("Tax category created: " +
+            taxCategoryService.createTaxCategory(
+                    taxCategoryName,
+                    taxCategoryKey,
+                    taxRates
+                )
+                .get()
+                .getBody()
+                .getName()
         );
 
         apiRoot_poc.close();
