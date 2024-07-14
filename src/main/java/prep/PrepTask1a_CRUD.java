@@ -26,7 +26,7 @@ public class PrepTask1a_CRUD {
         // TODO Step 2: Provide credentials in dev.properties
         // TODO Step 3: Provide prefix in APIHelper
         // TODO Step 4: Check ClientService.java
-        // TODO Step 5: Create a new customer.
+         // TODO Step 5: Create a new customer.
         // TODO Step 6: Update the customer's billing address.
         // TODO Step 7: Create a customer group.
         // TODO Step 8: Assign the customer to the customer group.
@@ -37,11 +37,11 @@ public class PrepTask1a_CRUD {
 
 //        String customerGroupName = "B2B Group L2";
 //        String customerGroupKey = "b2b-group-l2";
-        String customerEmail = "john_doe@email.com";
-        String customerPassword = "john_doe_password";
-        String customerKey = "john_doe";
+        String customerEmail = "john_roe@email.com";
+        String customerPassword = "john_roe_password";
+        String customerKey = "john_roe";
         String customerFirstName = "John";
-        String customerLastName = "Doe";
+        String customerLastName = "Roe";
         String customerCountry = "DE";
 //        String customerStreetName = "Am Borsigcurm";
 //        String customerStreetNumber = "2";
@@ -67,7 +67,7 @@ public class PrepTask1a_CRUD {
 //        logger.info("Create sign up completed."  +
 //                customerService.createCustomer("","","","","",""));
 
-        logger.info("Create a new customer." +
+        logger.info("Create a new customer.\n" +
             customerService.createCustomer(
                     customerEmail,
                     customerPassword,
@@ -79,6 +79,16 @@ public class PrepTask1a_CRUD {
                 .get()
                 .getBody()
                 .getCustomer()
+        );
+
+        logger.info("Update the customer's billing address.\n" +
+            customerService.updateCustomerBillingAddress(
+                customerService.getCustomerByKey(customerKey).get(),
+                customerStreetName,
+                customerStreetNumber,
+                customerPostalCode,
+                customerCity,
+                customerCountry).get().getBody().getKey()
         );
 
         apiRoot_poc.close();

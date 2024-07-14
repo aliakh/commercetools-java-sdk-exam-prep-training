@@ -61,6 +61,42 @@ public class CustomerService {
                 .execute();
     }
 
+    public CompletableFuture<ApiHttpResponse<Customer>> updateCustomerBillingAddress(
+        final ApiHttpResponse<Customer> customerApiHttpResponse,
+        final String streetName,
+        final String streetNumber,
+        final String postalCode,
+        final String city,
+        final String country) {
+
+        final Customer customer = customerApiHttpResponse.getBody();
+
+        return
+            apiRoot
+                .customers()
+                .withKey(customer.getKey())
+                .post(CustomerUpdateBuilder.of()
+                    .version(customer.getVersion())
+                    .actions(
+                        CustomerChangeAddressActionBuilder.of()
+                            //.addressKey(customer.getKey() + "-" + country + "v2")
+                            .address(
+                                AddressBuilder.of()
+                                    .firstName(customer.getFirstName())
+                                    .lastName(customer.getLastName())
+                                    .streetName(streetName)
+                                    .streetNumber(streetNumber)
+                                    .postalCode(postalCode)
+                                    .city(city)
+                                    .country(country)
+                                    .build()
+                            )
+                            .build()
+                    )
+                    .build()
+                )
+                .execute();
+    }
 
     public CompletableFuture<ApiHttpResponse<Customer>> assignCustomerToCustomerGroup(
             final ApiHttpResponse<Customer> customerApiHttpResponse,
