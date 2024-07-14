@@ -1,6 +1,11 @@
 package prep;
 
 import com.commercetools.api.client.ProjectApiRoot;
+import com.commercetools.api.models.common.LocalizedString;
+import com.commercetools.api.models.common.LocalizedStringBuilder;
+import com.commercetools.api.models.tax_category.TaxRateDraft;
+import com.commercetools.api.models.tax_category.TaxRateDraftBuilder;
+
 import prep.impl.CustomerGroupService;
 import prep.impl.CustomerService;
 import prep.impl.ApiPrefixHelper;
@@ -9,6 +14,8 @@ import org.slf4j.LoggerFactory;
 import prep.impl.TaxCategoryService;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import static prep.impl.ClientService.createApiClient;
@@ -33,7 +40,7 @@ public class PrepTask1a_CRUD {
          // TODO Step 7: Create a customer group.
          // TODO Step 8: Assign the customer to the customer group.
          // TODO Step 9: Delete the customer.
-        // TODO Step 10: Create a tax category.
+         // TODO Step 10: Create a tax category.
         // TODO Step 11: Create a few product categories.
         // TODO Step 12: Query the categories by key.
 
@@ -134,10 +141,30 @@ public class PrepTask1a_CRUD {
                 .getKey()
         );
 
-        String taxCategoryName = "new standard tax category";
-        String taxCategoryKey = "new-standard-tax-category";
+        String taxCategoryName = "Tax Category 1";
+        String taxCategoryKey = "tax-category-1";
 
-        logger.info("Tax category created: " +
+        List<TaxRateDraft> taxRates = new ArrayList<>();
+
+        TaxRateDraft taxRateDraft1 =
+            TaxRateDraftBuilder.of()
+                .name("Germany Tax")
+                .country("DE")
+                .amount(0.14)
+                .includedInPrice(true)
+                .build();
+        taxRates.add(taxRateDraft1);
+
+        TaxRateDraft taxRateDraft2 =
+            TaxRateDraftBuilder.of()
+                .name("Great Britain Tax")
+                .country("GB")
+                .amount(0.20)
+                .includedInPrice(true)
+                .build();
+        taxRates.add(taxRateDraft2);
+
+        logger.info("Create a tax category.\n" +
             taxCategoryService.createTaxCategory(
                     taxCategoryName,
                     taxCategoryKey,
@@ -145,7 +172,7 @@ public class PrepTask1a_CRUD {
                 )
                 .get()
                 .getBody()
-                .getName()
+                .getKey()
         );
 
         apiRoot_poc.close();
