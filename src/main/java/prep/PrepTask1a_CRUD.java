@@ -30,7 +30,7 @@ public class PrepTask1a_CRUD {
          // TODO Step 5: Create a new customer.
          // TODO Step 6: Update the customer's billing address.
          // TODO Step 7: Create a customer group.
-        // TODO Step 8: Assign the customer to the customer group.
+         // TODO Step 8: Assign the customer to the customer group.
         // TODO Step 9: Delete the customer.
         // TODO Step 10: Create a tax category.
         // TODO Step 11: Create a few product categories.
@@ -48,8 +48,8 @@ public class PrepTask1a_CRUD {
         String customerPostalCode = "60594";
         String customerCity = "Frankfurt am Main";
 
-        String customerGroupName = "Customer Group 1";
-        String customerGroupKey = "customer-group-1";
+        String customerGroupName = "Customer Group";
+        String customerGroupKey = "customer-group";
 
         final ProjectApiRoot apiRoot_poc =
                 createApiClient(
@@ -61,17 +61,10 @@ public class PrepTask1a_CRUD {
 //        TaxCategoryService taxCategoryService = new TaxCategoryService(apiRoot_poc);
 //        CategoryService categoryService = new CategoryService(apiRoot_poc);
 
-//        logger.info("TODO List: Create a new customer.\n" +
-//                "Update the customer's billing address.\n" +
-//                "Create a customer group.\n" +
-//                "Assign the customer to the customer group.\n" +
 //                "Delete the customer.\n" +
 //                "Create a tax category.\n" +
 //                "Create a few product categories.\n" +
 //                "Query the categories by key.\n");
-
-//        logger.info("Create sign up completed."  +
-//                customerService.createCustomer("","","","","",""));
 
         logger.info("Create a new customer.\n" +
             customerService.createCustomer(
@@ -107,6 +100,15 @@ public class PrepTask1a_CRUD {
                 )
                 .get()
                 .getBody().getName()
+        );
+
+        logger.info("Assign the customer to the customer group.\n" +
+            customerService.assignCustomerToCustomerGroup(
+                    customerService.getCustomerByKey(customerKey).get(),
+                    customerGroupService.getCustomerGroupByKey(customerGroupKey).get()
+                )
+                .get()
+                .getBody()
         );
 
         apiRoot_poc.close();

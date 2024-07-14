@@ -4,6 +4,7 @@ import com.commercetools.api.client.ProjectApiRoot;
 import com.commercetools.api.models.common.AddressBuilder;
 import com.commercetools.api.models.customer.*;
 import com.commercetools.api.models.customer_group.CustomerGroup;
+import com.commercetools.api.models.customer_group.CustomerGroupResourceIdentifierBuilder;
 import io.vrap.rmf.base.client.ApiHttpResponse;
 
 import java.util.concurrent.CompletableFuture;
@@ -103,7 +104,23 @@ public class CustomerService {
             final ApiHttpResponse<Customer> customerApiHttpResponse,
             final ApiHttpResponse<CustomerGroup> customerGroupApiHttpResponse)
     {
+        final Customer customer = customerApiHttpResponse.getBody();
+        final CustomerGroup customerGroup = customerGroupApiHttpResponse.getBody();
+
         return
-                null;
+            apiRoot
+                .customers()
+                .withKey(customer.getKey())
+                .post(CustomerUpdateBuilder.of()
+                    .version(customer.getVersion())
+                    .actions(
+                        CustomerSetCustomerGroupActionBuilder.of()
+                            .customerGroup(CustomerGroupResourceIdentifierBuilder.of()
+                                .key(customerGroup.getKey())
+                                .build())
+                            .build()
+                    )
+                    .build())
+                .execute();
     }
 }
