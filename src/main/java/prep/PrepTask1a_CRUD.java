@@ -141,8 +141,8 @@ public class PrepTask1a_CRUD {
                 .getKey()
         );
 
-        String taxCategoryName = "Tax Category 1";
-        String taxCategoryKey = "tax-category-1";
+        String taxCategoryName = "Tax Category 2";
+        String taxCategoryKey = "tax-category-2";
 
         List<TaxRateDraft> taxRates = new ArrayList<>();
 
@@ -157,9 +157,9 @@ public class PrepTask1a_CRUD {
 
         TaxRateDraft taxRateDraft2 =
             TaxRateDraftBuilder.of()
-                .name("Great Britain Tax")
-                .country("GB")
-                .amount(0.20)
+                .name("France Tax")
+                .country("FR")
+                .amount(0.11)
                 .includedInPrice(true)
                 .build();
         taxRates.add(taxRateDraft2);
