@@ -173,7 +173,7 @@ public class PrepTask1a_CRUD {
         );
 
         LocalizedString categoryName1 = LocalizedStringBuilder.of()
-            .values(new HashMap<>() {
+            .values(new HashMap<String, String>() {
                 {
                     put("en", "Home");
                     put("de", "Haus");
@@ -182,7 +182,7 @@ public class PrepTask1a_CRUD {
             .build();
 
         LocalizedString categoryName2 = LocalizedStringBuilder.of()
-            .values(new HashMap<>() {
+            .values(new HashMap<String, String>() {
                 {
                     put("en", "Garden");
                     put("de", "Garten");
