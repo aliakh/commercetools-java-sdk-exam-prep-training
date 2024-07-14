@@ -1,6 +1,7 @@
 package prep;
 
 import com.commercetools.api.client.ProjectApiRoot;
+import prep.impl.CustomerGroupService;
 import prep.impl.CustomerService;
 import prep.impl.ApiPrefixHelper;
 import org.slf4j.Logger;
@@ -27,21 +28,19 @@ public class PrepTask1a_CRUD {
         // TODO Step 3: Provide prefix in APIHelper
         // TODO Step 4: Check ClientService.java
          // TODO Step 5: Create a new customer.
-        // TODO Step 6: Update the customer's billing address.
-        // TODO Step 7: Create a customer group.
+         // TODO Step 6: Update the customer's billing address.
+         // TODO Step 7: Create a customer group.
         // TODO Step 8: Assign the customer to the customer group.
         // TODO Step 9: Delete the customer.
         // TODO Step 10: Create a tax category.
         // TODO Step 11: Create a few product categories.
         // TODO Step 12: Query the categories by key.
 
-//        String customerGroupName = "B2B Group L2";
-//        String customerGroupKey = "b2b-group-l2";
-        String customerEmail = "john_soe@email.com";
-        String customerPassword = "john_soe_password";
-        String customerKey = "john_soe";
+        String customerEmail = "john_doe@email.com";
+        String customerPassword = "john_doe_password";
+        String customerKey = "john_doe";
         String customerFirstName = "John";
-        String customerLastName = "Soe";
+        String customerLastName = "Doe";
         String customerCountry = "DE";
 
         String customerStreetName = "Hedderichstrasse";
@@ -49,12 +48,18 @@ public class PrepTask1a_CRUD {
         String customerPostalCode = "60594";
         String customerCity = "Frankfurt am Main";
 
+        String customerGroupName = "Customer Group 1";
+        String customerGroupKey = "customer-group-1";
+
         final ProjectApiRoot apiRoot_poc =
                 createApiClient(
                         ApiPrefixHelper.API_POC_CLIENT_PREFIX.getPrefix()
                 );
 
         CustomerService customerService = new CustomerService(apiRoot_poc);
+        CustomerGroupService customerGroupService = new CustomerGroupService(apiRoot_poc);
+//        TaxCategoryService taxCategoryService = new TaxCategoryService(apiRoot_poc);
+//        CategoryService categoryService = new CategoryService(apiRoot_poc);
 
 //        logger.info("TODO List: Create a new customer.\n" +
 //                "Update the customer's billing address.\n" +
@@ -93,6 +98,15 @@ public class PrepTask1a_CRUD {
                 )
                 .get()
                 .getBody()
+        );
+
+        logger.info("Create a customer group.\n" +
+            customerGroupService.createCustomerGroup(
+                    customerGroupName,
+                    customerGroupKey
+                )
+                .get()
+                .getBody().getName()
         );
 
         apiRoot_poc.close();
