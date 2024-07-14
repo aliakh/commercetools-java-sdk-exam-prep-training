@@ -42,8 +42,23 @@ public class CustomerService {
             final String lastName,
             final String country)
         {
-            return
-                    null;
+            return apiRoot
+                .customers()
+                .post(CustomerDraftBuilder.of()
+                    .email(email)
+                    .password(password)
+                    .firstName(firstName)
+                    .lastName(lastName)
+                    .key(customerKey)
+                    .addresses(
+                        AddressBuilder.of()
+                            //.key(customerKey + "-" + country)
+                            .country(country)
+                            .build()
+                    )
+                    .defaultShippingAddress(0)
+                    .build())
+                .execute();
     }
 
 

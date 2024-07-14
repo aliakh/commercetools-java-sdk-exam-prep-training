@@ -35,6 +35,18 @@ public class PrepTask1a_CRUD {
         // TODO Step 11: Create a few product categories.
         // TODO Step 12: Query the categories by key.
 
+//        String customerGroupName = "B2B Group L2";
+//        String customerGroupKey = "b2b-group-l2";
+        String customerEmail = "john_doe@email.com";
+        String customerPassword = "john_doe_password";
+        String customerKey = "john_doe";
+        String customerFirstName = "John";
+        String customerLastName = "Doe";
+        String customerCountry = "DE";
+//        String customerStreetName = "Am Borsigcurm";
+//        String customerStreetNumber = "2";
+//        String customerPostalCode = "13507 ";
+//        String customerCity = "Berlin";
 
         final ProjectApiRoot apiRoot_poc =
                 createApiClient(
@@ -43,17 +55,31 @@ public class PrepTask1a_CRUD {
 
         CustomerService customerService = new CustomerService(apiRoot_poc);
 
-        logger.info("TODO List: Create a new customer.\n" +
-                "Update the customer's billing address.\n" +
-                "Create a customer group.\n" +
-                "Assign the customer to the customer group.\n" +
-                "Delete the customer.\n" +
-                "Create a tax category.\n" +
-                "Create a few product categories.\n" +
-                "Query the categories by key.\n");
+//        logger.info("TODO List: Create a new customer.\n" +
+//                "Update the customer's billing address.\n" +
+//                "Create a customer group.\n" +
+//                "Assign the customer to the customer group.\n" +
+//                "Delete the customer.\n" +
+//                "Create a tax category.\n" +
+//                "Create a few product categories.\n" +
+//                "Query the categories by key.\n");
 
 //        logger.info("Create sign up completed."  +
 //                customerService.createCustomer("","","","","",""));
+
+        logger.info("Create a new customer." +
+            customerService.createCustomer(
+                    customerEmail,
+                    customerPassword,
+                    customerKey,
+                    customerFirstName,
+                    customerLastName,
+                    customerCountry
+                )
+                .get()
+                .getBody()
+                .getCustomer()
+        );
 
         apiRoot_poc.close();
     }
