@@ -172,8 +172,8 @@ public class PrepTask1a_CRUD {
                 .getKey()
         );
 
-        final LocalizedString categoryName1 = LocalizedStringBuilder.of()
-            .values(new HashMap<String, String>() {
+        LocalizedString categoryName1 = LocalizedStringBuilder.of()
+            .values(new HashMap<>() {
                 {
                     put("en", "Home");
                     put("de", "Haus");
@@ -181,8 +181,8 @@ public class PrepTask1a_CRUD {
             })
             .build();
 
-        final LocalizedString categoryName2 = LocalizedStringBuilder.of()
-            .values(new HashMap<String, String>() {
+        LocalizedString categoryName2 = LocalizedStringBuilder.of()
+            .values(new HashMap<>() {
                 {
                     put("en", "Garden");
                     put("de", "Garten");
@@ -195,7 +195,7 @@ public class PrepTask1a_CRUD {
         String categoryKey2 = "garden";
         String orderHint2 = "0.8";
 
-        logger.info("Create a product category.\n" +
+        logger.info("Create one product category.\n" +
             categoryService.createCategory(
                     categoryName1,
                     categoryKey1,
@@ -215,15 +215,33 @@ public class PrepTask1a_CRUD {
                 .getName()
         );
 
-        logger.info("Query a category by key.\n" +
-            categoryService.getCategoryByKey(                    categoryKey1)
+        logger.info("Query one category by key.\n" +
+            categoryService.getCategoryByKey(categoryKey1)
                 .get()
                 .getBody()
                 .getKey()
         );
 
         logger.info("Query another category by key.\n" +
-            categoryService.getCategoryByKey(                    categoryKey2)
+            categoryService.getCategoryByKey(categoryKey2)
+                .get()
+                .getBody()
+                .getKey()
+        );
+
+        logger.info("Delete one category.\n" +
+            categoryService.deleteCategory(
+                    categoryService.getCategoryByKey(categoryKey1).get()
+                )
+                .get()
+                .getBody()
+                .getKey()
+        );
+
+        logger.info("Delete another category.\n" +
+            categoryService.deleteCategory(
+                    categoryService.getCategoryByKey(categoryKey2).get()
+                )
                 .get()
                 .getBody()
                 .getKey()
