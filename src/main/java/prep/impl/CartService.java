@@ -22,17 +22,40 @@ public class CartService {
             final String cartId) {
 
         return
-                null;
+            apiRoot
+                .carts()
+                .withId(cartId)
+                .get()
+                .execute();
     }
 
 
     public CompletableFuture<ApiHttpResponse<Cart>> createCart(final ApiHttpResponse<Customer> customerApiHttpResponse) {
 
+        final Customer customer = customerApiHttpResponse.getBody();
         return
-                null;
+            apiRoot.carts()
+                .post(
+                    CartDraftBuilder.of()
+                        .currency("EUR")
+                        .customerEmail(customer.getEmail())
+                        .customerId(customer.getId())
+                        .shippingAddress(
+                            customer.getAddresses().stream()
+                                .filter(address -> address.getId().equals(customer.getDefaultShippingAddressId()))
+                                .findFirst()
+                                .orElse(null)
+                        )
+                        .country(customer.getAddresses().stream()
+                            .filter(address -> address.getId().equals(customer.getDefaultShippingAddressId()))
+                            .findFirst()
+                            .orElse(null)
+                            .getCountry()
+                        )
+                        .build()
+                )
+                .execute();
     }
-
-
 
     public CompletableFuture<ApiHttpResponse<Cart>> addProductToCartBySkusAndChannel(
             final ApiHttpResponse<Cart> cartApiHttpResponse,
