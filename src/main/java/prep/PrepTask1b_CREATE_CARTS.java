@@ -102,15 +102,15 @@ public class PrepTask1b_CREATE_CARTS {
             .getBody().getId();
         logger.info("Create a new anonymous cart.\n" + anonymousCartId);
 
-        Cart anonymousCart = cartService.getCartById(anonymousCartId)
+        Cart anonymousCart1 = cartService.getCartById(anonymousCartId)
             .thenComposeAsync(cartApiHttpResponse ->
                 cartService.addProductToCartBySkusAndChannel(cartApiHttpResponse, "RWG-09"))
             .get().getBody();
         logger.info("Add a line item to the anonymous cart.\n" +
-            anonymousCart.getLineItems().stream().map(LineItem::getProductKey).collect(Collectors.joining(", "))
+            anonymousCart1.getLineItems().stream().map(LineItem::getProductKey).collect(Collectors.joining(", "))
         );
 
-        Cart mergedCart = apiRoot_poc
+        Cart mergedCart1 = apiRoot_poc
             .login()
             .post(
                 CustomerSigninBuilder.of()
@@ -125,7 +125,7 @@ public class PrepTask1b_CREATE_CARTS {
             .execute()
             .toCompletableFuture().get().getBody().getCart();
         logger.info("Merge the anonymous cart with mode MERGE_WITH_EXISTING_CUSTOMER_CART.\n" +
-            mergedCart.getLineItems().stream().map(LineItem::getProductKey).collect(Collectors.joining(", "))
+            mergedCart1.getLineItems().stream().map(LineItem::getProductKey).collect(Collectors.joining(", "))
         );
 
         logger.info("Delete the customer.\n" +
