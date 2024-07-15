@@ -16,6 +16,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
 import static com.commercetools.api.models.customer.AnonymousCartSignInMode.MERGE_WITH_EXISTING_CUSTOMER_CART;
+import static com.commercetools.api.models.customer.AnonymousCartSignInMode.USE_AS_NEW_ACTIVE_CUSTOMER_CART;
 import static prep.impl.ClientService.createApiClient;
 
 
@@ -118,7 +119,7 @@ public class PrepTask1b_CREATE_CARTS {
             .login()
             .post(
                 CustomerSigninBuilder.of()
-                    .anonymousCartSignInMode(MERGE_WITH_EXISTING_CUSTOMER_CART) // Switch to USE_AS_NEW_ACTIVE_CUSTOMER_CART and notice the difference
+                    .anonymousCartSignInMode(MERGE_WITH_EXISTING_CUSTOMER_CART)
                     .email(customerEmail)
                     .password(customerPassword)
                     .anonymousCart(CartResourceIdentifierBuilder.of()
@@ -137,13 +138,13 @@ public class PrepTask1b_CREATE_CARTS {
         String anonymousCartId2 = cartService.createAnonymousCart()
             .toCompletableFuture().get()
             .getBody().getId();
-        logger.info("Create a new anonymous cart.\n" + anonymousCartId2);
+        logger.info("Create another new anonymous cart.\n" + anonymousCartId2);
 
-        Cart anonymousCart2 = cartService.getCartById(anonymousCartId1)
+        Cart anonymousCart2 = cartService.getCartById(anonymousCartId2)
             .thenComposeAsync(cartApiHttpResponse ->
-                cartService.addProductToCartBySkusAndChannel(cartApiHttpResponse, "RWG-09"))
+                cartService.addProductToCartBySkusAndChannel(cartApiHttpResponse, "CDG-09"))
             .get().getBody();
-        logger.info("Add a line item to the anonymous cart.\n" +
+        logger.info("Add a line item to the another anonymous cart.\n" +
             anonymousCart2.getLineItems().stream().map(LineItem::getProductKey).collect(Collectors.joining(", "))
         );
 
@@ -151,17 +152,17 @@ public class PrepTask1b_CREATE_CARTS {
             .login()
             .post(
                 CustomerSigninBuilder.of()
-                    .anonymousCartSignInMode(MERGE_WITH_EXISTING_CUSTOMER_CART) // Switch to USE_AS_NEW_ACTIVE_CUSTOMER_CART and notice the difference
+                    .anonymousCartSignInMode(USE_AS_NEW_ACTIVE_CUSTOMER_CART)
                     .email(customerEmail)
                     .password(customerPassword)
                     .anonymousCart(CartResourceIdentifierBuilder.of()
-                        .id(anonymousCartId1)
+                        .id(anonymousCartId2)
                         .build())
                     .build()
             )
             .execute()
             .toCompletableFuture().get().getBody().getCart();
-        logger.info("Merge the anonymous cart with mode MERGE_WITH_EXISTING_CUSTOMER_CART.\n" +
+        logger.info("Merge the anonymous cart with mode USE_AS_NEW_ACTIVE_CUSTOMER_CART.\n" +
             mergedCart2.getLineItems().stream().map(LineItem::getProductKey).collect(Collectors.joining(", "))
         );
 
