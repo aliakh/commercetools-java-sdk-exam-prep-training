@@ -97,6 +97,8 @@ public class PrepTask1a_CRUD {
                 .getAddresses()
         );
 
+
+
         String customerGroupName = "Customer Group 1";
         String customerGroupKey = "customer-group-1";
 
@@ -137,6 +139,8 @@ public class PrepTask1a_CRUD {
                 .getBody()
                 .getKey()
         );
+
+
 
         String taxCategoryName = "Tax Category 1";
         String taxCategoryKey = "tax-category-1";
@@ -195,7 +199,7 @@ public class PrepTask1a_CRUD {
         String categoryKey2 = "garden";
         String orderHint2 = "0.8";
 
-        logger.info("Create one product category.\n" +
+        logger.info("Create a product category.\n" +
             categoryService.createCategory(
                     categoryName1,
                     categoryKey1,
@@ -215,7 +219,7 @@ public class PrepTask1a_CRUD {
                 .getName()
         );
 
-        logger.info("Query one category by key.\n" +
+        logger.info("Query a category by key.\n" +
             categoryService.getCategoryByKey(categoryKey1)
                 .get()
                 .getBody()
@@ -229,7 +233,7 @@ public class PrepTask1a_CRUD {
                 .getKey()
         );
 
-        logger.info("Delete one category.\n" +
+        logger.info("Delete a category.\n" +
             categoryService.deleteCategory(
                     categoryService.getCategoryByKey(categoryKey1).get()
                 )
