@@ -59,6 +59,22 @@ public class CartService {
                 .execute();
     }
 
+    public CompletableFuture<ApiHttpResponse<Cart>> createAnonymousCart() {
+
+        return
+            apiRoot
+                .carts()
+                .post(
+                    CartDraftBuilder.of()
+                        .currency("EUR")
+                        .deleteDaysAfterLastModification(90L)
+                        .anonymousId("anonymous" + System.nanoTime())
+                        .country("DE")
+                        .build()
+                )
+                .execute();
+    }
+
     public CompletableFuture<ApiHttpResponse<Cart>> addProductToCartBySkusAndChannel(
         final ApiHttpResponse<Cart> cartApiHttpResponse,
         final String ... skus) {

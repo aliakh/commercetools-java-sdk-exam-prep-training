@@ -1,6 +1,7 @@
 package prep;
 
 import com.commercetools.api.client.ProjectApiRoot;
+import com.commercetools.api.models.cart.Cart;
 import prep.impl.ApiPrefixHelper;
 import prep.impl.CartService;
 import prep.impl.CustomerService;
@@ -85,9 +86,15 @@ public class PrepTask1b_CREATE_CARTS {
 
         logger.info("Cart updated: " +
             cartService.getCartById(cartId)
-                .thenComposeAsync(cartApiHttpResponse -> cartService.addProductToCartBySkusAndChannel(cartApiHttpResponse,"french-cooking-bundle"))
-                .get().getBody().getId()
+                .thenComposeAsync(cartApiHttpResponse ->
+                    cartService.addProductToCartBySkusAndChannel(cartApiHttpResponse,"HDG-02"))
+                .get().getBody()
         );
+
+        String anonymousCartId = cartService.createAnonymousCart()
+            .toCompletableFuture().get()
+            .getBody().getId();
+        logger.info("Create a new anonymous cart.\n" + anonymousCartId);
 
         logger.info("Delete the customer.\n" +
             customerService.deleteCustomer(
