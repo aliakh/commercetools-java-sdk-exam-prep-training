@@ -47,9 +47,6 @@ public class PrepTask1b_CREATE_CARTS {
         // TODO Step 1: Create a cart for the customer
         // TODO Add Line Items to it
         // TODO Copy the cart ID
-        logger.info("Cart created: " +
-                ""
-        );
 
         logger.info("Create a new customer.\n" +
             customerService.createCustomer(
