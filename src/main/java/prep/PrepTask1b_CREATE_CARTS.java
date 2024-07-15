@@ -2,6 +2,9 @@ package prep;
 
 import com.commercetools.api.client.ProjectApiRoot;
 import com.commercetools.api.models.cart.Cart;
+import com.commercetools.api.models.cart.CartResourceIdentifierBuilder;
+import com.commercetools.api.models.cart.LineItem;
+import com.commercetools.api.models.customer.CustomerSigninBuilder;
 import prep.impl.ApiPrefixHelper;
 import prep.impl.CartService;
 import prep.impl.CustomerService;
@@ -10,7 +13,9 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
+import java.util.stream.Collectors;
 
+import static com.commercetools.api.models.customer.AnonymousCartSignInMode.MERGE_WITH_EXISTING_CUSTOMER_CART;
 import static prep.impl.ClientService.createApiClient;
 
 
@@ -84,17 +89,44 @@ public class PrepTask1b_CREATE_CARTS {
             .get().getBody().getId();
         logger.info("Create a new cart.\n" + cartId);
 
-        logger.info("Cart updated: " +
-            cartService.getCartById(cartId)
-                .thenComposeAsync(cartApiHttpResponse ->
-                    cartService.addProductToCartBySkusAndChannel(cartApiHttpResponse,"HDG-02"))
-                .get().getBody()
+        Cart cart = cartService.getCartById(cartId)
+            .thenComposeAsync(cartApiHttpResponse ->
+                cartService.addProductToCartBySkusAndChannel(cartApiHttpResponse, "HDG-02"))
+            .get().getBody();
+        logger.info("Add a line item to the cart.\n" +
+            cart.getLineItems().stream().map(LineItem::getProductKey).collect(Collectors.joining())
         );
 
         String anonymousCartId = cartService.createAnonymousCart()
             .toCompletableFuture().get()
             .getBody().getId();
         logger.info("Create a new anonymous cart.\n" + anonymousCartId);
+
+        Cart anonymousCart = cartService.getCartById(anonymousCartId)
+            .thenComposeAsync(cartApiHttpResponse ->
+                cartService.addProductToCartBySkusAndChannel(cartApiHttpResponse, "RWG-09"))
+            .get().getBody();
+        logger.info("Add a line item to the anonymous cart.\n" +
+            anonymousCart.getLineItems().stream().map(LineItem::getProductKey).collect(Collectors.joining(", "))
+        );
+
+        Cart mergedCart = apiRoot_poc
+            .login()
+            .post(
+                CustomerSigninBuilder.of()
+                    .anonymousCartSignInMode(MERGE_WITH_EXISTING_CUSTOMER_CART) // Switch to USE_AS_NEW_ACTIVE_CUSTOMER_CART and notice the difference
+                    .email(customerEmail)
+                    .password(customerPassword)
+                    .anonymousCart(CartResourceIdentifierBuilder.of()
+                        .id(anonymousCartId)
+                        .build())
+                    .build()
+            )
+            .execute()
+            .toCompletableFuture().get().getBody().getCart();
+        logger.info("Merge the anonymous cart with mode MERGE_WITH_EXISTING_CUSTOMER_CART.\n" +
+            mergedCart.getLineItems().stream().map(LineItem::getProductKey).collect(Collectors.joining(", "))
+        );
 
         logger.info("Delete the customer.\n" +
             customerService.deleteCustomer(
