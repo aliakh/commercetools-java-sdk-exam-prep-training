@@ -6,6 +6,8 @@ import com.commercetools.api.models.customer.Customer;
 import io.vrap.rmf.base.client.ApiHttpResponse;
 
 import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
 
@@ -58,14 +60,28 @@ public class CartService {
     }
 
     public CompletableFuture<ApiHttpResponse<Cart>> addProductToCartBySkusAndChannel(
-            final ApiHttpResponse<Cart> cartApiHttpResponse,
-            final String ... skus) {
+        final ApiHttpResponse<Cart> cartApiHttpResponse,
+        final String ... skus) {
 
+        final Cart cart = cartApiHttpResponse.getBody();
         return
-                null;
+            apiRoot.carts()
+                .withId(cart.getId())
+                .post(
+                    CartUpdateBuilder.of()
+                        .version(cart.getVersion())
+                        .actions(
+                            Stream.of(skus)
+                                .map(sku -> CartAddLineItemActionBuilder.of()
+                                    .sku(sku)
+                                    .build()
+                                )
+                                .collect(Collectors.toList())
+                        )
+                        .build()
+                )
+                .execute();
     }
-
-
 
     public CompletableFuture<ApiHttpResponse<Cart>> setShipping(final ApiHttpResponse<Cart> cartApiHttpResponse) {
 
