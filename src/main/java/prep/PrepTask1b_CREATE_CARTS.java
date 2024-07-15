@@ -84,6 +84,8 @@ public class PrepTask1b_CREATE_CARTS {
                 .getAddresses()
         );
 
+
+
         String cartId = customerService.getCustomerByKey(customerKey)
             .thenComposeAsync(cartService::createCart)
             .get().getBody().getId();
@@ -97,12 +99,14 @@ public class PrepTask1b_CREATE_CARTS {
             cart.getLineItems().stream().map(LineItem::getProductKey).collect(Collectors.joining())
         );
 
-        String anonymousCartId = cartService.createAnonymousCart()
+
+
+        String anonymousCartId1 = cartService.createAnonymousCart()
             .toCompletableFuture().get()
             .getBody().getId();
-        logger.info("Create a new anonymous cart.\n" + anonymousCartId);
+        logger.info("Create a new anonymous cart.\n" + anonymousCartId1);
 
-        Cart anonymousCart1 = cartService.getCartById(anonymousCartId)
+        Cart anonymousCart1 = cartService.getCartById(anonymousCartId1)
             .thenComposeAsync(cartApiHttpResponse ->
                 cartService.addProductToCartBySkusAndChannel(cartApiHttpResponse, "RWG-09"))
             .get().getBody();
@@ -118,7 +122,7 @@ public class PrepTask1b_CREATE_CARTS {
                     .email(customerEmail)
                     .password(customerPassword)
                     .anonymousCart(CartResourceIdentifierBuilder.of()
-                        .id(anonymousCartId)
+                        .id(anonymousCartId1)
                         .build())
                     .build()
             )
@@ -127,6 +131,41 @@ public class PrepTask1b_CREATE_CARTS {
         logger.info("Merge the anonymous cart with mode MERGE_WITH_EXISTING_CUSTOMER_CART.\n" +
             mergedCart1.getLineItems().stream().map(LineItem::getProductKey).collect(Collectors.joining(", "))
         );
+
+
+
+        String anonymousCartId2 = cartService.createAnonymousCart()
+            .toCompletableFuture().get()
+            .getBody().getId();
+        logger.info("Create a new anonymous cart.\n" + anonymousCartId2);
+
+        Cart anonymousCart2 = cartService.getCartById(anonymousCartId1)
+            .thenComposeAsync(cartApiHttpResponse ->
+                cartService.addProductToCartBySkusAndChannel(cartApiHttpResponse, "RWG-09"))
+            .get().getBody();
+        logger.info("Add a line item to the anonymous cart.\n" +
+            anonymousCart2.getLineItems().stream().map(LineItem::getProductKey).collect(Collectors.joining(", "))
+        );
+
+        Cart mergedCart2 = apiRoot_poc
+            .login()
+            .post(
+                CustomerSigninBuilder.of()
+                    .anonymousCartSignInMode(MERGE_WITH_EXISTING_CUSTOMER_CART) // Switch to USE_AS_NEW_ACTIVE_CUSTOMER_CART and notice the difference
+                    .email(customerEmail)
+                    .password(customerPassword)
+                    .anonymousCart(CartResourceIdentifierBuilder.of()
+                        .id(anonymousCartId1)
+                        .build())
+                    .build()
+            )
+            .execute()
+            .toCompletableFuture().get().getBody().getCart();
+        logger.info("Merge the anonymous cart with mode MERGE_WITH_EXISTING_CUSTOMER_CART.\n" +
+            mergedCart2.getLineItems().stream().map(LineItem::getProductKey).collect(Collectors.joining(", "))
+        );
+
+
 
         logger.info("Delete the customer.\n" +
             customerService.deleteCustomer(
