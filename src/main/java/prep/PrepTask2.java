@@ -117,31 +117,29 @@ public class PrepTask2 {
         //  Determine if there is at least one Inventory entry for the Store.
         //  Console log a user-friendly message indicating availability.
 
-        String searchQuery = "RWG-09";
+        String sku = "RWG-09";
 
         ProductProjectionPagedSearchResponse response = apiRoot
             .productProjections()
             .search()
             .get()
-            .withFilterQuery("sku:\"" + searchQuery + "\"")
-            // TODO Get all Facets for Enum size and Number weight_in_kg
-            //.withFacet("variants.attributes.size")
-            //.addFacet("variants.attributes.weight_in_kg:range (0 to 1), (1 to 5), (5 to 20)")
-            // TODO Give price range on products with no effect on facets
-            //.withFilter("variants.price.centAmount:range (100 to 100000)")
-            // TODO: with effect on facets
-            //.addFilterQuery("variants.price.centAmount:range (100 to 100000)")
-            // TODO: Simulate click on facet box from attribute size
-            //.withFilterFacets("variants.attributes.size:\"box\"")
+            .withFilterQuery("variants.sku:\"" + sku + "\"")
             .executeBlocking()
             .getBody();
 
         Optional<ProductProjection> productProjection = response.getResults().stream().findFirst();
         if (productProjection.isPresent()) {
-            ProductVariant variant = productProjection.get().getMasterVariant();
-            System.out.println("Found variant: " + variant.getId());
+            ProductVariant variant = productProjection.get()
+                .getVariants()
+                .stream()
+                .filter(productVariant -> productVariant.getSku().equals(sku))
+                .findFirst()
+                .orElseThrow();
+
+            System.out.println("variant: " + variant);
+            System.out.println("is on stock: " + variant.getAvailability().getIsOnStock());
         } else {
-            System.out.println("No product found for the search query.");
+            System.out.println("no variants found.");
         }
     }
 }
