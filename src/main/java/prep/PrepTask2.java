@@ -129,17 +129,17 @@ public class PrepTask2 {
 
         Optional<ProductProjection> productProjection = response.getResults().stream().findFirst();
         if (productProjection.isPresent()) {
-            ProductVariant variant = productProjection.get()
-                .getVariants()
-                .stream()
-                .filter(productVariant -> productVariant.getSku().equals(sku))
-                .findFirst()
-                .orElseThrow();
-
+            ProductVariant variant = productProjection.get().getMasterVariant();
             System.out.println("variant: " + variant);
             System.out.println("is on stock: " + variant.getAvailability().getIsOnStock());
         } else {
             System.out.println("no variants found.");
         }
+
+        // Build a set of functions to manage a basic Shopping Cart.
+        //  Create a new Cart for an anonymous user.
+        //  Add a Product (which has available inventory) to the Cart.
+        //  Increase the quantity of the existing Line Item in the Cart (check that you have enough inventory for this item to complete the action).
+        //  Make multiple changes to the Cart in a single request. This should include creating a Cart, adding an email address, Line Item, Country, and Locale.
     }
 }
