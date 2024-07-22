@@ -35,10 +35,10 @@ public class PrepTask2 {
             .get()
             .getBody();
 
-        logger.info("countries {}", project.getCountries());
-        logger.info("currencies {}", project.getCurrencies());
-        logger.info("languages {}", project.getLanguages());
-        logger.info("trial until {}", project.getTrialUntil());
+        logger.info("countries: {}", project.getCountries());
+        logger.info("currencies: {}", project.getCurrencies());
+        logger.info("languages: {}", project.getLanguages());
+        logger.info("trial until: {}", project.getTrialUntil());
 
         String customerEmail = "john_doe@email.com";
         String customerPassword = "john_doe_password";
@@ -70,7 +70,7 @@ public class PrepTask2 {
             .getCustomer();
 
         Address address1 = customer1.getAddresses().get(0);
-        logger.info("old phone {}", address1.getPhone());
+        logger.info("old phone: {}", address1.getPhone());
 
         Customer customer2 = apiRoot
             .customers()
@@ -94,7 +94,7 @@ public class PrepTask2 {
             .getBody();
 
         Address address2 = customer2.getAddresses().get(0);
-        logger.info("new phone {}", address2.getPhone());
+        logger.info("new phone: {}", address2.getPhone());
 
         apiRoot
             .customers()
