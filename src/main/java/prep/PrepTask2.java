@@ -82,7 +82,7 @@ public class PrepTask2 {
                         .addressKey(address1.getKey())
                         .address(
                             AddressBuilder.of(address1)
-                                .phone(String.valueOf(new Random().nextInt()))
+                                .phone(String.valueOf(Math.abs(new Random().nextInt())))
                                 .build()
                         )
                         .build()
