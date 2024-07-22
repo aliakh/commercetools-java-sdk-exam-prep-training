@@ -107,5 +107,10 @@ public class PrepTask2 {
             .execute()
             .get()
             .getBody();
+
+        // Check if a specific Product Variant (identified by an sku) is in stock for a given Store.
+        //  Fetch the Product Variant using Product Search or Product Projection Search.
+        //  Determine if there is at least one Inventory entry for the Store.
+        //  Console log a user-friendly message indicating availability.
     }
 }
