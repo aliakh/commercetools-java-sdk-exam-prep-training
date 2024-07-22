@@ -47,6 +47,9 @@ public class PrepTask2 {
         String customerLastName = "Doe";
         String customerCountry = "DE";
 
+        // Update a Customer's phone number:
+        //  Create a function that takes a Customer key, version, and updates the phone number.
+        //  Handle version mismatch.
 
         Customer customer1 = apiRoot
             .customers()
