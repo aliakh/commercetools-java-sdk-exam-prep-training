@@ -7,12 +7,16 @@ import com.commercetools.api.models.customer.Customer;
 import com.commercetools.api.models.customer.CustomerChangeAddressActionBuilder;
 import com.commercetools.api.models.customer.CustomerDraftBuilder;
 import com.commercetools.api.models.customer.CustomerUpdateBuilder;
+import com.commercetools.api.models.product.ProductProjection;
+import com.commercetools.api.models.product.ProductProjectionPagedSearchResponse;
+import com.commercetools.api.models.product.ProductVariant;
 import com.commercetools.api.models.project.Project;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import prep.impl.ApiPrefixHelper;
 
 import java.io.IOException;
+import java.util.Optional;
 import java.util.Random;
 import java.util.concurrent.ExecutionException;
 
@@ -112,5 +116,24 @@ public class PrepTask2 {
         //  Fetch the Product Variant using Product Search or Product Projection Search.
         //  Determine if there is at least one Inventory entry for the Store.
         //  Console log a user-friendly message indicating availability.
+
+        String searchQuery = "RWG-09";
+
+        ProductProjectionPagedSearchResponse response = apiRoot
+            .productProjections()
+            .search()
+            .withText("en", searchQuery)
+            .executeBlocking()
+            .getBody();
+
+        Optional<ProductProjection> productProjection = response.getResults().stream().findFirst();
+        if (productProjection.isPresent()) {
+            ProductVariant variant = productProjection.get().getMasterVariant();
+            System.out.println("Found variant: " + variant.getId());
+        } else {
+            System.out.println("No product found for the search query.");
+        }
+    }
+}
     }
 }
