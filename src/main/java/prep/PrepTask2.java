@@ -1,9 +1,11 @@
 package prep;
 
 import com.commercetools.api.client.ProjectApiRoot;
+import com.commercetools.api.models.common.Address;
 import com.commercetools.api.models.common.AddressBuilder;
 import com.commercetools.api.models.customer.Customer;
 import com.commercetools.api.models.customer.CustomerChangeAddressActionBuilder;
+import com.commercetools.api.models.customer.CustomerDraftBuilder;
 import com.commercetools.api.models.customer.CustomerUpdateBuilder;
 import com.commercetools.api.models.project.Project;
 import org.slf4j.Logger;
@@ -11,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import prep.impl.ApiPrefixHelper;
 
 import java.io.IOException;
+import java.util.Random;
 import java.util.concurrent.ExecutionException;
 
 import static prep.impl.ClientService.createApiClient;
@@ -44,37 +47,62 @@ public class PrepTask2 {
         String customerLastName = "Doe";
         String customerCountry = "DE";
 
-        Customer customer = apiRoot
+
+        Customer customer1 = apiRoot
             .customers()
-            .withKey(customerKey)
-            .get()
+            .post(CustomerDraftBuilder.of()
+                .email(customerEmail)
+                .password(customerPassword)
+                .firstName(customerFirstName)
+                .lastName(customerLastName)
+                .key(customerKey)
+                .addresses(
+                    AddressBuilder.of()
+                        .key(customerKey + "-" + customerCountry)
+                        .country(customerCountry)
+                        .build()
+                )
+                .defaultShippingAddress(0)
+                .build())
             .execute()
             .get()
-            .getBody();
+            .getBody()
+            .getCustomer();
 
-        apiRoot
+        Address address1 = customer1.getAddresses().get(0);
+        logger.info("old phone {}", address1.getPhone());
+
+        Customer customer2 = apiRoot
             .customers()
-            .withKey(customer.getKey())
+            .withKey(customer1.getKey())
             .post(CustomerUpdateBuilder.of()
-                .version(customer.getVersion())
+                .version(customer1.getVersion())
                 .actions(
                     CustomerChangeAddressActionBuilder.of()
-                        .addressKey(customer.getKey() + "-" + customerCountry)
+                        .addressKey(address1.getKey())
                         .address(
-                            AddressBuilder.of()
-                                .firstName(customer.getFirstName())
-                                .lastName(customer.getLastName())
-                                .streetName(streetName)
-                                .streetNumber(streetNumber)
-                                .postalCode(postalCode)
-                                .city(city)
-                                .country(country)
+                            AddressBuilder.of(address1)
+                                .phone(String.valueOf(new Random().nextInt()))
                                 .build()
                         )
                         .build()
                 )
                 .build()
             )
-            .execute();
+            .execute()
+            .get()
+            .getBody();
+
+        Address address2 = customer2.getAddresses().get(0);
+        logger.info("new phone {}", address2.getPhone());
+
+        apiRoot
+            .customers()
+            .withKey(customer2.getKey())
+            .delete()
+            .withVersion(customer2.getVersion())
+            .execute()
+            .get()
+            .getBody();
     }
 }
