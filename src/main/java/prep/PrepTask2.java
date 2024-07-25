@@ -3,8 +3,10 @@ package prep;
 import com.commercetools.api.client.ProjectApiRoot;
 import com.commercetools.api.models.cart.Cart;
 import com.commercetools.api.models.cart.CartAddLineItemActionBuilder;
+import com.commercetools.api.models.cart.CartChangeLineItemQuantityActionBuilder;
 import com.commercetools.api.models.cart.CartDraftBuilder;
 import com.commercetools.api.models.cart.CartUpdateBuilder;
+import com.commercetools.api.models.cart.LineItem;
 import com.commercetools.api.models.common.Address;
 import com.commercetools.api.models.common.AddressBuilder;
 import com.commercetools.api.models.customer.Customer;
@@ -188,11 +190,31 @@ public class PrepTask2 {
                 }
             )
             .get().getBody();
+
+        LineItem lineItem2 = cart2.getLineItems().stream().findFirst().orElseThrow();
         logger.info("product added to cart: {}",
-            cart2.getLineItems()
-                .stream()
-                .map(lineItem -> "product key: " + lineItem.getProductKey() + ", quantity " + lineItem.getQuantity())
-                .collect(Collectors.joining("\n"))
+            "product key: " + lineItem2.getProductKey() + ", quantity " + lineItem2.getQuantity()
         );
+
+        Cart cart3 = apiRoot.carts()
+            .withId(cart2.getId())
+            .post(
+                CartUpdateBuilder.of()
+                    .version(cart2.getVersion())
+                    .actions(
+                        CartChangeLineItemQuantityActionBuilder.of()
+                            .lineItemId(lineItem2.getId())
+                            .quantity(2L)
+                            .build()
+                    )
+                    .build()
+            )
+            .execute().get().getBody();
+
+        LineItem lineItem3 = cart3.getLineItems().stream().findFirst().orElseThrow();
+        logger.info("product increased to cart: {}",
+            "product key: " + lineItem3.getProductKey() + ", quantity " + lineItem3.getQuantity()
+        );
+
     }
 }
