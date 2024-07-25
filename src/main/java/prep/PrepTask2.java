@@ -244,10 +244,10 @@ public class PrepTask2 {
                                                 .sku("CDG-09")
                                                 .build(),
                                             CartUpdateActionBuilder.of()
-                                                .setCountryBuilder().country("FR")
+                                                .setCountryBuilder().country("AU")
                                                 .build(),
                                             CartUpdateActionBuilder.of()
-                                                .setLocaleBuilder().locale("fr-FR")
+                                                .setLocaleBuilder().locale("en-AU")
                                                 .build()
                                         )
                                         .collect(Collectors.toList())
