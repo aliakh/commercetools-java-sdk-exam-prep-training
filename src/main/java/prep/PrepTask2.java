@@ -238,10 +238,10 @@ public class PrepTask2 {
                                 .actions(
                                     Stream.of(
                                             CartUpdateActionBuilder.of()
-                                                .setCustomerEmailBuilder().email(String.valueOf(Math.abs(new Random().nextInt())) + "@email.com")
+                                                .setCustomerEmailBuilder().email(Math.abs(new Random().nextInt()) + "@email.com")
                                                 .build(),
                                             CartAddLineItemActionBuilder.of()
-                                                .sku("CDG-09")
+                                                .sku("RWG-09")
                                                 .build(),
                                             CartUpdateActionBuilder.of()
                                                 .setCountryBuilder().country("AU")
@@ -261,12 +261,12 @@ public class PrepTask2 {
             .getBody()
             .get();
 
-        LineItem lineItem4 = cart4.getLineItems().stream().findFirst().orElseThrow();
+//        LineItem lineItem4 = cart4.getLineItems().stream().findFirst().orElseThrow();
         logger.info("cart created: {}",
             " customer email: " + cart4.getCustomerEmail() +
-                " line item: product key: " + lineItem4.getProductKey() + ", quantity " + lineItem4.getQuantity() +
-                " country: " + cart4.getCountry() +
-                " locale: " + cart4.getLocale()
+//                ", line item: product key: " + lineItem4.getProductKey() + ", quantity " + lineItem4.getQuantity() +
+                ", country: " + cart4.getCountry() +
+                ", locale: " + cart4.getLocale()
         );
     }
 }
