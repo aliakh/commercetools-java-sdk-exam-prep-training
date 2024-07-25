@@ -123,13 +123,11 @@ public class PrepTask2 {
         //  Determine if there is at least one Inventory entry for the Store.
         //  Console log a user-friendly message indicating availability.
 
-        String sku = "RWG-09";
-
         ProductProjectionPagedSearchResponse response = apiRoot
             .productProjections()
             .search()
             .get()
-            .withFilterQuery("variants.sku:\"" + sku + "\"")
+            .withFilterQuery("variants.sku:\"RWG-09\"")
             .executeBlocking()
             .getBody();
 
@@ -162,7 +160,7 @@ public class PrepTask2 {
             .get()
             .getBody()
             .get();
-        logger.info("anonymous cart: {}", cart1);
+        logger.info("anonymous cart created: {}", cart1);
 
         Cart cart2 = apiRoot
             .carts()
@@ -190,5 +188,11 @@ public class PrepTask2 {
                 }
             )
             .get().getBody();
+        logger.info("product added to cart: {}",
+            cart2.getLineItems()
+                .stream()
+                .map(lineItem -> "product key: " + lineItem.getProductKey() + ", quantity " + lineItem.getQuantity())
+                .collect(Collectors.joining("\n"))
+        );
     }
 }
