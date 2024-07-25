@@ -5,6 +5,7 @@ import com.commercetools.api.models.cart.Cart;
 import com.commercetools.api.models.cart.CartAddLineItemActionBuilder;
 import com.commercetools.api.models.cart.CartChangeLineItemQuantityActionBuilder;
 import com.commercetools.api.models.cart.CartDraftBuilder;
+import com.commercetools.api.models.cart.CartUpdateActionBuilder;
 import com.commercetools.api.models.cart.CartUpdateBuilder;
 import com.commercetools.api.models.cart.LineItem;
 import com.commercetools.api.models.common.Address;
@@ -216,5 +217,56 @@ public class PrepTask2 {
             "product key: " + lineItem3.getProductKey() + ", quantity " + lineItem3.getQuantity()
         );
 
+        Cart cart4 = apiRoot
+            .carts()
+            .post(
+                CartDraftBuilder.of()
+                    .currency("EUR")
+                    .deleteDaysAfterLastModification(90L)
+                    .anonymousId("anonymous" + System.nanoTime())
+                    .country("DE")
+                    .build()
+            )
+            .execute()
+            .thenComposeAsync(cartApiHttpResponse -> {
+                    Cart cart = cartApiHttpResponse.getBody();
+                    return apiRoot.carts()
+                        .withId(cart.getId())
+                        .post(
+                            CartUpdateBuilder.of()
+                                .version(cart.getVersion())
+                                .actions(
+                                    Stream.of(
+                                            CartUpdateActionBuilder.of()
+                                                .setCustomerEmailBuilder().email(String.valueOf(Math.abs(new Random().nextInt())) + "@email.com")
+                                                .build(),
+                                            CartAddLineItemActionBuilder.of()
+                                                .sku("CDG-09")
+                                                .build(),
+                                            CartUpdateActionBuilder.of()
+                                                .setCountryBuilder().country("FR")
+                                                .build(),
+                                            CartUpdateActionBuilder.of()
+                                                .setLocaleBuilder().locale("fr-FR")
+                                                .build()
+                                        )
+                                        .collect(Collectors.toList())
+                                )
+                                .build()
+                        )
+                        .execute();
+                }
+            )
+            .get()
+            .getBody()
+            .get();
+
+        LineItem lineItem4 = cart4.getLineItems().stream().findFirst().orElseThrow();
+        logger.info("cart created: {}",
+            " customer email: " + cart4.getCustomerEmail() +
+                " line item: product key: " + lineItem4.getProductKey() + ", quantity " + lineItem4.getQuantity() +
+                " country: " + cart4.getCountry() +
+                " locale: " + cart4.getLocale()
+        );
     }
 }
