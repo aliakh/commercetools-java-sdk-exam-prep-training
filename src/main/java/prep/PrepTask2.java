@@ -1,6 +1,10 @@
 package prep;
 
 import com.commercetools.api.client.ProjectApiRoot;
+import com.commercetools.api.models.cart.Cart;
+import com.commercetools.api.models.cart.CartAddLineItemActionBuilder;
+import com.commercetools.api.models.cart.CartDraftBuilder;
+import com.commercetools.api.models.cart.CartUpdateBuilder;
 import com.commercetools.api.models.common.Address;
 import com.commercetools.api.models.common.AddressBuilder;
 import com.commercetools.api.models.customer.Customer;
@@ -19,6 +23,8 @@ import java.io.IOException;
 import java.util.Optional;
 import java.util.Random;
 import java.util.concurrent.ExecutionException;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static prep.impl.ClientService.createApiClient;
 
@@ -130,10 +136,10 @@ public class PrepTask2 {
         Optional<ProductProjection> productProjection = response.getResults().stream().findFirst();
         if (productProjection.isPresent()) {
             ProductVariant variant = productProjection.get().getMasterVariant();
-            System.out.println("variant: " + variant);
-            System.out.println("is on stock: " + variant.getAvailability().getIsOnStock());
+            logger.info("variant: {}", variant);
+            logger.info("is on stock: {}", variant.getAvailability().getIsOnStock());
         } else {
-            System.out.println("no variants found.");
+            logger.info("no variants found");
         }
 
         // Build a set of functions to manage a basic Shopping Cart.
@@ -141,5 +147,48 @@ public class PrepTask2 {
         //  Add a Product (which has available inventory) to the Cart.
         //  Increase the quantity of the existing Line Item in the Cart (check that you have enough inventory for this item to complete the action).
         //  Make multiple changes to the Cart in a single request. This should include creating a Cart, adding an email address, Line Item, Country, and Locale.
+
+        Cart cart1 = apiRoot
+            .carts()
+            .post(
+                CartDraftBuilder.of()
+                    .currency("EUR")
+                    .deleteDaysAfterLastModification(90L)
+                    .anonymousId("anonymous" + System.nanoTime())
+                    .country("DE")
+                    .build()
+            )
+            .execute()
+            .get()
+            .getBody()
+            .get();
+        logger.info("anonymous cart: {}", cart1);
+
+        Cart cart2 = apiRoot
+            .carts()
+            .withId(cart1.getId())
+            .get()
+            .execute()
+            .thenComposeAsync(cartApiHttpResponse -> {
+                Cart cart = cartApiHttpResponse.getBody();
+                return apiRoot.carts()
+                    .withId(cart.getId())
+                    .post(
+                        CartUpdateBuilder.of()
+                            .version(cart.getVersion())
+                            .actions(
+                                Stream.of("RWG-09")
+                                    .map(sku -> CartAddLineItemActionBuilder.of()
+                                        .sku(sku)
+                                        .build()
+                                    )
+                                    .collect(Collectors.toList())
+                            )
+                            .build()
+                    )
+                    .execute();
+                }
+            )
+            .get().getBody();
     }
 }
