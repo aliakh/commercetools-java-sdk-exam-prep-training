@@ -170,23 +170,23 @@ public class PrepTask2 {
             .get()
             .execute()
             .thenComposeAsync(cartApiHttpResponse -> {
-                Cart cart = cartApiHttpResponse.getBody();
-                return apiRoot.carts()
-                    .withId(cart.getId())
-                    .post(
-                        CartUpdateBuilder.of()
-                            .version(cart.getVersion())
-                            .actions(
-                                Stream.of("RWG-09")
-                                    .map(sku -> CartAddLineItemActionBuilder.of()
-                                        .sku(sku)
-                                        .build()
-                                    )
-                                    .collect(Collectors.toList())
-                            )
-                            .build()
-                    )
-                    .execute();
+                    Cart cart = cartApiHttpResponse.getBody();
+                    return apiRoot.carts()
+                        .withId(cart.getId())
+                        .post(
+                            CartUpdateBuilder.of()
+                                .version(cart.getVersion())
+                                .actions(
+                                    Stream.of("RWG-09")
+                                        .map(sku -> CartAddLineItemActionBuilder.of()
+                                            .sku(sku)
+                                            .build()
+                                        )
+                                        .collect(Collectors.toList())
+                                )
+                                .build()
+                        )
+                        .execute();
                 }
             )
             .get().getBody();
