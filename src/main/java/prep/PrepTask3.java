@@ -45,6 +45,7 @@ public class PrepTask3 {
 
 //      HTTP API queries and Query Predicates
         String countryCode = "DE";
+        String city = "Potsdam";
 
 //        Write a function that retrieves all Customers from a specific country.
         apiRoot
@@ -68,8 +69,8 @@ public class PrepTask3 {
         apiRoot
             .customers()
             .get()
-            .withWhere("addresses(upper(country)=\"" + countryCode + "\")")
-            .addWhere("addresses(lower(city)=\"potsdam\")")
+            .withWhere("addresses(country=\"" + countryCode + "\")")
+            .addWhere("addresses(city=\"" + city + "\")")
             .executeBlocking()
             .getBody()
             .getResults()
