@@ -93,7 +93,20 @@ public class PrepTask3 {
 //          Filter by a single Store projection.
 //          Use the Product Projections or Product Search endpoint.
 
-        //String storeKey = "cool-store";
+        ProductProjectionPagedQueryResponse productProjectionPagedQueryResponse = apiRoot
+            .productProjections()
+            .get()
+            .withOffset(12)
+            .withLimit(12)
+            .withSort("categoryOrderHints.f3697de5-4208-4b30-8c87-6f6307b03619 asc")
+            .executeBlocking()
+            .getBody();
+
+        productProjectionPagedQueryResponse.getResults().forEach(productProjection -> {
+                logger.info("key: {}", productProjection.getKey());
+            }
+        );
+
         ProductProjectionPagedSearchResponse productProjectionPagedSearchResponse = apiRoot
             .productProjections()
             .search()
