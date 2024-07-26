@@ -87,12 +87,12 @@ public class PrepTask3 {
                 )
             );
 
-//        Make a request to get data for a Product Listing Page.
-//          Facets displayed should be: Price and Category
-//          Twelve Products should be displayed at a time. Display the second page of results.
-//          Products should be ordered by the setCategoryOrderHint. This ensures that Products are displayed in the correct merchandised order.
-//          Filter by a single Store projection.
-//          Use the Product Projections or Product Search endpoint.
+        // Make a request to get data for a Product Listing Page.
+        //   Facets displayed should be: Price and Category
+        //   Twelve Products should be displayed at a time. Display the second page of results.
+        //   Products should be ordered by the setCategoryOrderHint. This ensures that Products are displayed in the correct merchandised order.
+        //   Filter by a single Store projection.
+        //   Use the Product Projections or Product Search endpoint.
 
         ProductProjectionPagedQueryResponse productProjectionPagedQueryResponse = apiRoot
             .productProjections()
@@ -138,28 +138,28 @@ public class PrepTask3 {
         responseByPrice
             .getResults()
             .forEach(productProjection -> {
-                logger.info("prices: {}", productProjection
-                    .getVariants()
-                    .stream()
-                    .map(
-                        productVariant -> productVariant.getPrices()
-                            .stream()
-                            .map(price -> price.getValue().getCentAmount())
-                            .collect(Collectors.toList())
-                    )
-                    .collect(Collectors.toList()));
-            }
-        );
+                    logger.info("prices: {}", productProjection
+                        .getVariants()
+                        .stream()
+                        .map(
+                            productVariant -> productVariant.getPrices()
+                                .stream()
+                                .map(price -> price.getValue().getCentAmount())
+                                .collect(Collectors.toList())
+                        )
+                        .collect(Collectors.toList()));
+                }
+            );
         responseByPrice
             .getResults()
             .forEach(productProjection -> {
-                logger.info("categories: {}", productProjection
-                    .getCategories()
-                    .stream()
-                    .map(CategoryReference::getId)
-                    .collect(Collectors.toList()));
-            }
-        );
+                    logger.info("categories: {}", productProjection
+                        .getCategories()
+                        .stream()
+                        .map(CategoryReference::getId)
+                        .collect(Collectors.toList()));
+                }
+            );
 
         // Write a function that accepts an array of sku and returns all products that have at least one Product Variant matching any of the provided sku values.
         ProductProjectionPagedQueryResponse responseBySkus = apiRoot
@@ -176,16 +176,16 @@ public class PrepTask3 {
         responseBySkus
             .getResults()
             .forEach(productProjection -> {
-                logger.info("key: {}", productProjection.getKey());
+                    logger.info("key: {}", productProjection.getKey());
 
-                logger.info("skus: {}", productProjection
-                    .getVariants()
-                    .stream()
-                    .map(
-                        productVariant -> productVariant.getSku()
-                    )
-                    .collect(Collectors.toList()));
-            }
-        );
+                    logger.info("skus: {}", productProjection
+                        .getVariants()
+                        .stream()
+                        .map(
+                            productVariant -> productVariant.getSku()
+                        )
+                        .collect(Collectors.toList()));
+                }
+            );
     }
 }
