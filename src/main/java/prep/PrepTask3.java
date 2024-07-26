@@ -17,6 +17,7 @@ import com.commercetools.api.models.customer.CustomerDraftBuilder;
 import com.commercetools.api.models.customer.CustomerPagedQueryResponse;
 import com.commercetools.api.models.customer.CustomerUpdateBuilder;
 import com.commercetools.api.models.product.ProductProjection;
+import com.commercetools.api.models.product.ProductProjectionPagedQueryResponse;
 import com.commercetools.api.models.product.ProductProjectionPagedSearchResponse;
 import com.commercetools.api.models.product.ProductVariant;
 import com.commercetools.api.models.project.Project;
@@ -97,14 +98,27 @@ public class PrepTask3 {
             .get()
             .withOffset(12)
             .withLimit(12)
-            .withSort("setCategoryOrderHint asc")
+            //.withSort("categoryOrderHints asc")
             .withFacet("price")
             .addFacet("categories.id")
             .executeBlocking()
             .getBody();
 
         logger.info("response: {}", response);
+
 //        Create a function that takes a Category's id and a maximum price as input and returns all the Products within that Category below the specified price.
+        String categoryId = "f3697de5-4208-4b30-8c87-6f6307b03619";
+        int maxPrice = 1;
+        String query = String.format("categories.id='%s' and variants.price.centAmount < %d", categoryId, (int) (maxPrice * 100));
+
+        ProductProjectionPagedQueryResponse response2 = apiRoot
+            .productProjections()
+            .get()
+            .withWhere(query)
+            .executeBlocking()
+            .getBody();
+
+        logger.info("response: {}", response2);
 //        Write a function that accepts an array of sku and returns all products that have at least one Product Variant matching any of the provided sku values.
     }
 }
