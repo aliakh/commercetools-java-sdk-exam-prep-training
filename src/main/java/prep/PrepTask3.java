@@ -109,7 +109,7 @@ public class PrepTask3 {
 //        Create a function that takes a Category's id and a maximum price as input and returns all the Products within that Category below the specified price.
         String categoryId = "f3697de5-4208-4b30-8c87-6f6307b03619";
         int maxPrice = 1;
-        String query = String.format("categories.id='%s' and variants.price.centAmount < %d", categoryId, (int) (maxPrice * 100));
+        String query = String.format("categories.id:\"%s\" and variants.price.centAmount < %d", categoryId, (int) (maxPrice * 100));
 
         ProductProjectionPagedQueryResponse response2 = apiRoot
             .productProjections()
