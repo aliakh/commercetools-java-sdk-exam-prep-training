@@ -28,6 +28,7 @@ import org.slf4j.LoggerFactory;
 import prep.impl.ApiPrefixHelper;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Optional;
 import java.util.Random;
 import java.util.concurrent.ExecutionException;
@@ -159,6 +160,29 @@ public class PrepTask3 {
             }
         );
 
-//        Write a function that accepts an array of sku and returns all products that have at least one Product Variant matching any of the provided sku values.
+        // Write a function that accepts an array of sku and returns all products that have at least one Product Variant matching any of the provided sku values.
+        String skusQuery = Stream.of("RWG-09", "GRCG-01", "ADPC-7")
+            .map(sku -> String.format("variants(sku=\"%s\")", sku))
+            .collect(Collectors.joining(" or "));
+
+        ProductProjectionPagedQueryResponse response3 = apiRoot
+            .productProjections()
+            .get()
+            .withWhere(skusQuery)
+            .executeBlocking()
+            .getBody();
+
+        response3.getResults().forEach(productProjection -> {
+                logger.info("key: {}", productProjection.getKey());
+
+                logger.info("skus: {}", productProjection
+                    .getVariants()
+                    .stream()
+                    .map(
+                        productVariant -> productVariant.getSku()
+                    )
+                    .collect(Collectors.toList()));
+            }
+        );
     }
 }
