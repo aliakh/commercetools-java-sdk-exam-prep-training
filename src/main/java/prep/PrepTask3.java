@@ -127,7 +127,7 @@ public class PrepTask3 {
 */
 
         // Create a function that takes a Category's id and a maximum price as input and returns all the Products within that Category below the specified price.
-        String query = "variants(prices(value(centAmount < 1000)))";
+        String query = "categories(id=\"468e593d-45b7-4443-b500-a2221756fdee\") and variants(prices(value(centAmount < 10000)))";
 
         ProductProjectionPagedQueryResponse response2 = apiRoot
             .productProjections()
@@ -139,6 +139,10 @@ public class PrepTask3 {
         logger.info("response: {}", response2);
         response2.getResults().forEach(productProjection -> {
                 logger.info("price: {}", productProjection.getVariants().stream().map(v -> v.getPrices().stream().map(p -> p.getValue().getCentAmount()).collect(Collectors.toList())).collect(Collectors.toList()));
+            }
+        );
+        response2.getResults().forEach(productProjection -> {
+                logger.info("category: {}", productProjection.getCategories().stream().map(v -> v.getId()).collect(Collectors.toList()));
             }
         );
 
