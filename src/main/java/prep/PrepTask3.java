@@ -138,21 +138,20 @@ public class PrepTask3 {
 
         logger.info("response: {}", response);
         response.getResults().forEach(productProjection -> {
-                logger.info("price: {}", productProjection
+                logger.info("prices: {}", productProjection
                     .getVariants()
                     .stream()
-                    .map(v -> v.getPrices()
-                        .stream()
-                        .map(p -> p.getValue()
-                            .getCentAmount()
-                        )
-                        .collect(Collectors.toList())
+                    .map(
+                        productVariant -> productVariant.getPrices()
+                            .stream()
+                            .map(price -> price.getValue().getCentAmount())
+                            .collect(Collectors.toList())
                     )
                     .collect(Collectors.toList()));
             }
         );
         response.getResults().forEach(productProjection -> {
-                logger.info("category: {}", productProjection
+                logger.info("categories: {}", productProjection
                     .getCategories()
                     .stream()
                     .map(CategoryReference::getId)
