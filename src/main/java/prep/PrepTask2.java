@@ -268,5 +268,17 @@ public class PrepTask2 {
                 ", country: " + cart4.getCountry() +
                 ", locale: " + cart4.getLocale()
         );
+
+//        HTTP API queries and Query Predicates
+//        Write a function that retrieves all Customers from a specific country.
+//            Modify the previous function to retrieve Customers from a specific city within a Country, ensuring the search is case-insensitive. (Hint: explore Query Predicates in the documentation).
+//        Make a request to get data for a Product Listing Page.
+//        Facets displayed should be: Price and Category
+//        Twelve Products should be displayed at a time. Display the second page of results.
+//        Products should be ordered by the setCategoryOrderHint. This ensures that Products are displayed in the correct merchandised order.
+//            Filter by a single Store projection.
+//            Use the Product Projections or Product Search endpoint.
+//            Create a function that takes a Category's id and a maximum price as input and returns all the Products within that Category below the specified price.
+//        Write a function that accepts an array of sku and returns all products that have at least one Product Variant matching any of the provided sku values.
     }
 }
