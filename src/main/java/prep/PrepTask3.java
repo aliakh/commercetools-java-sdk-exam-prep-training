@@ -10,6 +10,7 @@ import com.commercetools.api.models.cart.CartUpdateBuilder;
 import com.commercetools.api.models.cart.LineItem;
 import com.commercetools.api.models.common.Address;
 import com.commercetools.api.models.common.AddressBuilder;
+import com.commercetools.api.models.common.BaseAddress;
 import com.commercetools.api.models.customer.Customer;
 import com.commercetools.api.models.customer.CustomerChangeAddressActionBuilder;
 import com.commercetools.api.models.customer.CustomerDraftBuilder;
@@ -46,21 +47,44 @@ public class PrepTask3 {
         String countryCode = "DE";
 
 //        Write a function that retrieves all Customers from a specific country.
-        CustomerPagedQueryResponse response = apiRoot
+        apiRoot
             .customers()
             .get()
             .withWhere("addresses(country=\"" + countryCode + "\")")
             .executeBlocking()
-            .getBody();
-
-        response
+            .getBody()
             .getResults()
             .forEach(customer ->
-                logger.info("customer: {}", customer.getFirstName() + " " + customer.getLastName())
+                logger.info("customer: {}", customer.getFirstName()
+                    + " " + customer.getLastName()
+                    + " " + customer.getAddresses()
+                    .stream()
+                        .map(BaseAddress::getCity)
+                    .collect(Collectors.toList())
+                )
+            );
+
+//        Modify the previous function to retrieve Customers from a specific city within a Country, ensuring the search is case-insensitive. (Hint: explore Query Predicates in the documentation).
+        apiRoot
+            .customers()
+            .get()
+            .withWhere("addresses(upper(country)=\"" + countryCode + "\")")
+            .addWhere("addresses(lower(city)=\"potsdam\")")
+            .executeBlocking()
+            .getBody()
+            .getResults()
+            .forEach(customer ->
+                logger.info("customer: {}", customer.getFirstName()
+                    + " " + customer.getLastName()
+                    + " " + customer.getAddresses()
+                    .stream()
+                    .map(BaseAddress::getCity)
+                    .collect(Collectors.toList())
+                )
             );
 
 
-//        Modify the previous function to retrieve Customers from a specific city within a Country, ensuring the search is case-insensitive. (Hint: explore Query Predicates in the documentation).
+
 //        Make a request to get data for a Product Listing Page.
 //          Facets displayed should be: Price and Category
 //          Twelve Products should be displayed at a time. Display the second page of results.
