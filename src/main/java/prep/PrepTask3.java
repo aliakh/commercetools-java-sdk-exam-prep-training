@@ -45,7 +45,7 @@ public class PrepTask3 {
             createApiClient(
                 ApiPrefixHelper.API_POC_CLIENT_PREFIX.getPrefix()
             );
-
+/*
         // HTTP API queries and Query Predicates
         String countryCode = "DE";
         String city = "Potsdam";
@@ -124,9 +124,10 @@ public class PrepTask3 {
             }
         );
         logger.info("facets: {}", productProjectionPagedSearchResponse.getFacets());
-/*
-//        Create a function that takes a Category's id and a maximum price as input and returns all the Products within that Category below the specified price.
-        String query = "categories.id:\"f3697de5-4208-4b30-8c87-6f6307b03619\" and variants.price.centAmount < 100";
+*/
+
+        // Create a function that takes a Category's id and a maximum price as input and returns all the Products within that Category below the specified price.
+        String query = "variants(prices(value(centAmount < 1000)))";
 
         ProductProjectionPagedQueryResponse response2 = apiRoot
             .productProjections()
@@ -136,8 +137,11 @@ public class PrepTask3 {
             .getBody();
 
         logger.info("response: {}", response2);
-//        Write a function that accepts an array of sku and returns all products that have at least one Product Variant matching any of the provided sku values.
+        response2.getResults().forEach(productProjection -> {
+                logger.info("price: {}", productProjection.getVariants().stream().map(v -> v.getPrices().stream().map(p -> p.getValue().getCentAmount()).collect(Collectors.toList())).collect(Collectors.toList()));
+            }
+        );
 
- */
+//        Write a function that accepts an array of sku and returns all products that have at least one Product Variant matching any of the provided sku values.
     }
 }
