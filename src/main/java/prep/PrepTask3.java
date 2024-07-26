@@ -16,6 +16,7 @@ import com.commercetools.api.models.customer.CustomerChangeAddressActionBuilder;
 import com.commercetools.api.models.customer.CustomerDraftBuilder;
 import com.commercetools.api.models.customer.CustomerPagedQueryResponse;
 import com.commercetools.api.models.customer.CustomerUpdateBuilder;
+import com.commercetools.api.models.product.ProductPagedQueryResponse;
 import com.commercetools.api.models.product.ProductProjection;
 import com.commercetools.api.models.product.ProductProjectionPagedQueryResponse;
 import com.commercetools.api.models.product.ProductProjectionPagedSearchResponse;
@@ -107,8 +108,6 @@ public class PrepTask3 {
         logger.info("response: {}", response);
 
 //        Create a function that takes a Category's id and a maximum price as input and returns all the Products within that Category below the specified price.
-        String categoryId = "f3697de5-4208-4b30-8c87-6f6307b03619";
-        int maxPrice = 1;
         String query = "categories.id:\"f3697de5-4208-4b30-8c87-6f6307b03619\" and variants.price.centAmount < 100";
 
         ProductProjectionPagedQueryResponse response2 = apiRoot
