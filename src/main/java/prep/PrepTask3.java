@@ -69,8 +69,7 @@ public class PrepTask3 {
         apiRoot
             .customers()
             .get()
-            .withWhere("addresses(country=\"" + countryCode + "\")")
-            .addWhere("addresses(city=\"" + city + "\")")
+            .withWhere(String.format("addresses(country=\"%s\" and city=\"%s\")", countryCode, city))
             .executeBlocking()
             .getBody()
             .getResults()
@@ -84,14 +83,27 @@ public class PrepTask3 {
                 )
             );
 
-
-
 //        Make a request to get data for a Product Listing Page.
 //          Facets displayed should be: Price and Category
 //          Twelve Products should be displayed at a time. Display the second page of results.
 //          Products should be ordered by the setCategoryOrderHint. This ensures that Products are displayed in the correct merchandised order.
 //          Filter by a single Store projection.
 //          Use the Product Projections or Product Search endpoint.
+
+        String storeKey = "cool-store";
+        ProductProjectionPagedSearchResponse response = apiRoot
+            .productProjections()
+            .search()
+            .get()
+            .withOffset(12)
+            .withLimit(12)
+            .withSort("setCategoryOrderHint asc")
+            .withFacet("price")
+            .addFacet("categories.id")
+            .executeBlocking()
+            .getBody();
+
+        logger.info("response: {}", response);
 //        Create a function that takes a Category's id and a maximum price as input and returns all the Products within that Category below the specified price.
 //        Write a function that accepts an array of sku and returns all products that have at least one Product Variant matching any of the provided sku values.
     }
