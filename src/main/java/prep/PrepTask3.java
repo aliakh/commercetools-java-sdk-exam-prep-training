@@ -161,7 +161,7 @@ public class PrepTask3 {
         );
 
         // Write a function that accepts an array of sku and returns all products that have at least one Product Variant matching any of the provided sku values.
-        String skusQuery = Stream.of("RWG-09", "GRCG-01", "ADPC-7")
+        String skusQuery = Stream.of("MR-08", "NTSS-02", "GPC-02", "MUTB-02")
             .map(sku -> String.format("variants(sku=\"%s\")", sku))
             .collect(Collectors.joining(" or "));
 
