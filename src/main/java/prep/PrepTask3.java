@@ -8,6 +8,7 @@ import com.commercetools.api.models.cart.CartDraftBuilder;
 import com.commercetools.api.models.cart.CartUpdateActionBuilder;
 import com.commercetools.api.models.cart.CartUpdateBuilder;
 import com.commercetools.api.models.cart.LineItem;
+import com.commercetools.api.models.category.CategoryReference;
 import com.commercetools.api.models.common.Address;
 import com.commercetools.api.models.common.AddressBuilder;
 import com.commercetools.api.models.common.BaseAddress;
@@ -45,11 +46,11 @@ public class PrepTask3 {
                 ApiPrefixHelper.API_POC_CLIENT_PREFIX.getPrefix()
             );
 
-//      HTTP API queries and Query Predicates
+        // HTTP API queries and Query Predicates
         String countryCode = "DE";
         String city = "Potsdam";
 
-//        Write a function that retrieves all Customers from a specific country.
+        // Write a function that retrieves all Customers from a specific country.
         apiRoot
             .customers()
             .get()
@@ -62,12 +63,12 @@ public class PrepTask3 {
                     + " " + customer.getLastName()
                     + " " + customer.getAddresses()
                     .stream()
-                        .map(BaseAddress::getCity)
+                    .map(BaseAddress::getCity)
                     .collect(Collectors.toList())
                 )
             );
 
-//        Modify the previous function to retrieve Customers from a specific city within a Country, ensuring the search is case-insensitive. (Hint: explore Query Predicates in the documentation).
+        // Modify the previous function to retrieve Customers from a specific city within a Country, ensuring the search is case-insensitive. (Hint: explore Query Predicates in the documentation).
         apiRoot
             .customers()
             .get()
@@ -92,21 +93,25 @@ public class PrepTask3 {
 //          Filter by a single Store projection.
 //          Use the Product Projections or Product Search endpoint.
 
-        String storeKey = "cool-store";
-        ProductProjectionPagedSearchResponse response = apiRoot
+        //String storeKey = "cool-store";
+        ProductProjectionPagedSearchResponse productProjectionPagedSearchResponse = apiRoot
             .productProjections()
             .search()
             .get()
             .withOffset(12)
             .withLimit(12)
-            //.withSort("categoryOrderHints asc")
+            .withSort("categoryOrderHints.f3697de5-4208-4b30-8c87-6f6307b03619 asc")
             .withFacet("price")
             .addFacet("categories.id")
             .executeBlocking()
             .getBody();
 
-        logger.info("response: {}", response);
-
+        productProjectionPagedSearchResponse.getResults().forEach(productProjection -> {
+                logger.info("key: {}", productProjection.getKey());
+            }
+        );
+        logger.info("facets: {}", productProjectionPagedSearchResponse.getFacets());
+/*
 //        Create a function that takes a Category's id and a maximum price as input and returns all the Products within that Category below the specified price.
         String query = "categories.id:\"f3697de5-4208-4b30-8c87-6f6307b03619\" and variants.price.centAmount < 100";
 
@@ -119,5 +124,7 @@ public class PrepTask3 {
 
         logger.info("response: {}", response2);
 //        Write a function that accepts an array of sku and returns all products that have at least one Product Variant matching any of the provided sku values.
+
+ */
     }
 }
