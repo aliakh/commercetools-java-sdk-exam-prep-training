@@ -46,7 +46,7 @@ public class PrepTask3 {
             createApiClient(
                 ApiPrefixHelper.API_POC_CLIENT_PREFIX.getPrefix()
             );
-/*
+
         // HTTP API queries and Query Predicates
         String countryCode = "DE";
         String city = "Potsdam";
@@ -125,20 +125,19 @@ public class PrepTask3 {
             }
         );
         logger.info("facets: {}", productProjectionPagedSearchResponse.getFacets());
-*/
 
         // Create a function that takes a Category's id and a maximum price as input and returns all the Products within that Category below the specified price.
-        String query = "categories(id=\"82f452b8-6c0c-4bef-b115-f549c7e68a0d\") and variants(prices(value(centAmount < 10000)))";
-
-        ProductProjectionPagedQueryResponse response = apiRoot
+        ProductProjectionPagedQueryResponse responseByPrice = apiRoot
             .productProjections()
             .get()
-            .withWhere(query)
+            .withWhere("categories(id=\"82f452b8-6c0c-4bef-b115-f549c7e68a0d\") and variants(prices(value(centAmount < 10000)))")
             .executeBlocking()
             .getBody();
 
-        logger.info("response: {}", response);
-        response.getResults().forEach(productProjection -> {
+        logger.info("response: {}", responseByPrice);
+        responseByPrice
+            .getResults()
+            .forEach(productProjection -> {
                 logger.info("prices: {}", productProjection
                     .getVariants()
                     .stream()
@@ -151,7 +150,9 @@ public class PrepTask3 {
                     .collect(Collectors.toList()));
             }
         );
-        response.getResults().forEach(productProjection -> {
+        responseByPrice
+            .getResults()
+            .forEach(productProjection -> {
                 logger.info("categories: {}", productProjection
                     .getCategories()
                     .stream()
@@ -161,18 +162,20 @@ public class PrepTask3 {
         );
 
         // Write a function that accepts an array of sku and returns all products that have at least one Product Variant matching any of the provided sku values.
-        String skusQuery = Stream.of("MR-08", "NTSS-02", "GPC-02", "MUTB-02")
-            .map(sku -> String.format("variants(sku=\"%s\")", sku))
-            .collect(Collectors.joining(" or "));
-
-        ProductProjectionPagedQueryResponse response3 = apiRoot
+        ProductProjectionPagedQueryResponse responseBySkus = apiRoot
             .productProjections()
             .get()
-            .withWhere(skusQuery)
+            .withWhere(
+                Stream.of("MR-08", "NTSS-02", "GPC-02", "MUTB-02")
+                    .map(sku -> String.format("variants(sku=\"%s\")", sku))
+                    .collect(Collectors.joining(" or "))
+            )
             .executeBlocking()
             .getBody();
 
-        response3.getResults().forEach(productProjection -> {
+        responseBySkus
+            .getResults()
+            .forEach(productProjection -> {
                 logger.info("key: {}", productProjection.getKey());
 
                 logger.info("skus: {}", productProjection
